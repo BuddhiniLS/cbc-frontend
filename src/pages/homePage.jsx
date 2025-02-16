@@ -1,5 +1,5 @@
 
-
+import{Link} from'react-router-dom';
 import React from "react";
 import "./homePage.css";
 
@@ -9,6 +9,9 @@ export default function HomePage() {
       <h1>Welcome to Our Website</h1>
       <p>Your one-stop solution for all your needs.</p>
       <button>Get Started</button>
+
+      <Link to="/login">Login</Link>  
+
     </div>
   );
 }
