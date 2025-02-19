@@ -8,6 +8,7 @@ import Loginpage from './pages/loginPage'
 import Homepage from './pages/homePage'
 
 import { BrowserRouter, Route, Routes, } from 'react-router-dom'
+import AdminHomePage from './pages/AdminHomePage'
 
 
 function App() {
@@ -15,15 +16,15 @@ function App() {
 
   return (
     <>
-    <BrowserRouter>
-      
-      <Routes path="/*" >
-        <Route path="/" element={<Homepage />} />
-        <Route path="/login" element={<Loginpage />} />
-        <Route path="/*" element={<h1>404 error</h1>} />
-      </Routes>
-    </BrowserRouter>
-
+      <BrowserRouter>
+        <Routes path="/*" >
+          <Route path="/" element={<Homepage />} />
+          <Route path="/login" element={<Loginpage />} />
+          <Route path='/singup' element={<signUpPage />} />
+          <Route path="/admin/*" element={<AdminHomePage />} />
+          <Route path="/" element={<Homepage />} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
