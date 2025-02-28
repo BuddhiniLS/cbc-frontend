@@ -9,6 +9,7 @@ import Homepage from './pages/homePage'
 
 import { BrowserRouter, Route, Routes, } from 'react-router-dom'
 import AdminHomePage from './pages/AdminHomePage'
+import { Toaster } from 'react-hot-toast'
 
 
 function App() {
@@ -17,10 +18,12 @@ function App() {
   return (
     <>
       <BrowserRouter>
+      <Toaster/>
+      <Toaster position='="top-right"' />
         <Routes path="/*" >
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Loginpage />} />
-          <Route path='/singup' element={<signUpPage />} />
+          <Route path="/signup" element={<UserData />} />
           <Route path="/admin/*" element={<AdminHomePage />} />
           <Route path="/" element={<Homepage />} />
         </Routes>

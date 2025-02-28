@@ -24,16 +24,18 @@ export default function AdminHomePage() {
             </div>
 
             {/* Main Content */}
-            <div className="w-[80%] h-screen bg-red-600 flex justify-center items-center">
-                <h1 className="text-white text-3xl">Welcome to Admin Panel</h1>
+            <div className="w-[80%] h-screen bg-blue-200 flex justify-center items-center">
+              
+                
 
                 <Routes path="/*" >
-            <Route path="/ Dashboard"element={<h1>Dashboard</h1>} />
-            <Route path="/ products"element={<AdminProductsPage/>} />
-            <Route path="/ orders"element={<h1>orders</h1>} />
-            <Route path="/ customers"element={<h1>customers</h1>} />
-            <Route path="/*" element={<h1>404 not found the admin page</h1>}/>
-            </Routes>
+                    <Route path="/Dashboard" element={<h1>Dashboard</h1>} />
+                    <Route path="/products" element={<AdminProductsPage />} />
+                    <Route path="/products/addProduct" element={<h1>Add Product</h1>} />
+                    <Route path="/orders" element={<h1>orders</h1>} />
+                    <Route path="/customers" element={<h1>customers</h1>} />
+                    <Route path="/*" element={<h1>404 not found the admin page</h1>} />
+                </Routes>
 
             </div>
         </div>
