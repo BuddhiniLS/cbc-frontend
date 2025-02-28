@@ -7,10 +7,9 @@ import Testing from './components/testing'
 import Loginpage from './pages/loginPage'
 import Homepage from './pages/homePage'
 
-import { BrowserRouter, Route, Routes, } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import AdminHomePage from './pages/AdminHomePage'
 import { Toaster } from 'react-hot-toast'
-
 
 function App() {
   const [count, setCount] = useState(0)
@@ -18,14 +17,13 @@ function App() {
   return (
     <>
       <BrowserRouter>
-      <Toaster/>
-      <Toaster position='="top-right"' />
-        <Routes path="/*" >
+        <Toaster position="top-right" />
+        <Routes>
+
           <Route path="/" element={<Homepage />} />
           <Route path="/login" element={<Loginpage />} />
           <Route path="/signup" element={<UserData />} />
           <Route path="/admin/*" element={<AdminHomePage />} />
-          <Route path="/" element={<Homepage />} />
         </Routes>
       </BrowserRouter>
     </>
