@@ -10,6 +10,24 @@ export default function AddProductForm() {
     const [stock, setStock] = useState("");
     const [description, setDescription] = useState("");
 
+function handlesubmit(){
+    console.log({
+        productId,
+        productName,
+        alternativeNames,
+        imageURLs,
+        price,
+        lastPrice,
+        stock,
+        description,
+
+    }
+
+    )
+}
+
+
+
     return (
         <div className="w-full h-full flex flex-col items-center p-6 bg-gray-100">
             <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Add Product</h1>
@@ -55,7 +73,7 @@ export default function AddProductForm() {
                     <textarea className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" rows="3" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
                 </div>
 
-                <button className="w-full bg-blue-600 text-white font-semibold p-2 rounded-lg hover:bg-blue-700 transition duration-300">Add Product</button>
+                <button className="w-full bg-blue-600 text-white font-semibold p-2 rounded-lg hover:bg-blue-700 transition duration-300" onClick={handlesubmit}>Add Product</button>
             </div>
         </div>
     );
