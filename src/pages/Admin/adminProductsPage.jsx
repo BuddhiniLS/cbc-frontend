@@ -8,6 +8,9 @@ import { Link } from "react-router-dom";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState([]);
+  const [test, setTest] = useState("Not Pressed");
+
+
 
   useEffect(() => {
     async function fetchProducts() {
@@ -24,15 +27,28 @@ export default function AdminProductsPage() {
 
   return (
     <div className="p-6 relative">
-     
-     <Link
-  to={"/admin/products/addProduct"}
-  className="absolute right-[25px] bottom-[25px] text-[25px] border-[#3682f6] border text-[#3682f6] p-5 rounded-xl hover:rounded-full shadow-lg hover: transition-all cursor-pointer"
-  aria-label="Add New Product"
->
-  <FaPlus />
-</Link>
 
+      <Link
+        to={"/admin/products/addProduct"}
+        className="absolute right-[25px] bottom-[25px] text-[25px] border-[#3682f6] border text-[#3682f6] p-5 rounded-xl hover:rounded-full shadow-lg hover: transition-all cursor-pointer"
+        aria-label="Add New Product"
+
+      ><FaPlus />
+      </Link>
+
+      <button
+
+        className="absolute right-[120px] bottom-[25px] text-[25px] border-[#3682f6] border text-[#3682f6] p-5 rounded-xl hover:rounded-full shadow-lg hover: transition-all cursor-pointer"
+        aria-label="Add New Product" onClick={() => {
+          if (test == "pressed") {
+            setTest("Not pressed")
+
+          } else {
+            setTest("pressed")
+          }
+        }
+
+        }>{test}</button>
 
       <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
         Admin Products Page
