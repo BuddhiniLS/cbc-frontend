@@ -1,166 +1,122 @@
-import { FaPlus } from "react-icons/fa";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
-import { FaTrash } from "react-icons/fa";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState([]);
-  const [test, setTest] = useState("Not Pressed");
-
-
+  const [productsLoaded, setProductsLoaded] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const res = await axios.get("http://localhost:5000/api/products");
-        console.log("Fetched products:", res.data); // Debugging
-        setProducts(res.data || []);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
+    if (!productsLoaded) {
+      const fetchProducts = async () => {
+        try {
+          const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products");
+
+          if (Array.isArray(response.data)) {
+            setProducts(response.data);
+          } else {
+            console.error("Expected an array, but got:", response.data);
+            toast.error("Failed to load products. Server returned invalid data.");
+          }
+
+          setProductsLoaded(true);
+        } catch (error) {
+          console.error("Error fetching products:", error);
+          toast.error("Failed to fetch products. Please try again.");
+        }
+      };
+
+      fetchProducts();
     }
-    fetchProducts();
-  }, []);
+  }, [productsLoaded]);
+
+  const deleteProduct = async (productId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("Unauthorized. Please log in again.");
+        return;
+      }
+
+      const response = await axios.delete(
+        import.meta.env.VITE_BACKEND_URL + `/api/products/${productId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      console.log(response.data);
+      toast.success("Product deleted successfully");
+      setProductsLoaded(false);
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Failed to delete product. Please try again.");
+    }
+  };
 
   return (
-    <div className="p-6 relative">
-
+    <div className="min-h-screen bg-gray-100 p-6 relative">
       <Link
         to={"/admin/products/addProduct"}
-        className="absolute right-[25px] bottom-[25px] text-[25px] border-[#3682f6] border text-[#3682f6] p-5 rounded-xl hover:rounded-full shadow-lg hover: transition-all cursor-pointer"
-        aria-label="Add New Product"
-
-      ><FaPlus />
+        className="absolute right-[25px] bottom-[25px] text-[25px]  border-[#3b82f6] border-[2px] text-[#3b82f6] p-5 rounded-xl hover:rounded-full"
+      >
+        <FaPlus />
       </Link>
 
-      <button
-
-        className="absolute right-[120px] bottom-[25px] text-[25px] border-[#3682f6] border text-[#3682f6] p-5 rounded-xl hover:rounded-full shadow-lg hover: transition-all cursor-pointer"
-        aria-label="Add New Product" onClick={() => {
-          if (test == "pressed") {
-            setTest("Not pressed")
-
-          } else {
-            setTest("pressed")
-          }
-        }
-
-        }>{test}</button>
-
-      <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
-        Admin Products Page
-      </h1>
-
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
-          <thead className="bg-gray-800 text-white">
-            <tr>
-              <th className="py-3 px-4 text-left">Product ID</th>
-              <th className="py-3 px-4 text-left">Product Name</th>
-              <th className="py-3 px-4 text-left">Price</th>
-              <th className="py-3 px-4 text-left">Last Price</th>
-              <th className="py-3 px-4 text-left">Stock</th>
-              <th className="py-3 px-4 text-left">Description</th>
-              <th className="py-3 px-4 text-center">Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {/* Static Data for Testing */}
-            {[
-              {
-                productId: "1234",
-                productName: "Face Serum",
-                price: "25.99",
-                lastPrice: "28.98",
-                stock: "200",
-                description: "The Ordinary's New Serum Ended",
-              },
-              {
-                productId: "1235",
-                productName: "Face Cream",
-                price: "125.99",
-                lastPrice: "228.98",
-                stock: "30",
-                description: "Hydrating face cream",
-              },
-              {
-                productId: "1236",
-                productName: "Face Mask",
-                price: "130.99",
-                lastPrice: "230.98",
-                stock: "35",
-                description: "Hydrating face mask",
-              },
-            ].map((product, index) => (
-              <tr
-                key={index}
-                className="border-b border-gray-200 hover:bg-gray-100 transition-all"
-              >
-                <td className="py-3 px-4">{product.productId}</td>
-                <td className="py-3 px-4">{product.productName}</td>
-                <td className="py-3 px-4">${product.price}</td>
-                <td className="py-3 px-4 text-red-500">${product.lastPrice}</td>
-                <td className="py-3 px-4">{product.stock}</td>
-                <td className="py-3 px-4">{product.description}</td>
-                <td className="py-3 px-4 flex justify-center space-x-3">
-                  <button
-                    className="text-blue-600 hover:text-blue-800 transition-all cursor-pointer"
-                    aria-label="Edit Product"
-                  >
-                    <FaPencil />
-                  </button>
-                  <button
-                    className="text-red-600 hover:text-red-800 transition-all cursor-pointer"
-                    aria-label="Delete Product"
-                  >
-                    <FaTrash />
-                  </button>
-                </td>
-              </tr>
-            ))}
-
-            {/* Dynamic Data from API */}
-            {products.length > 0 ? (
-              products.map((product) => (
-                <tr
-                  key={product._id}
-                  className="border-b border-gray-200 hover:bg-gray-100 transition-all"
-                >
-                  <td className="py-3 px-4">{product._id}</td>
-                  <td className="py-3 px-4">{product.productName}</td>
-                  <td className="py-3 px-4">${product.price}</td>
-                  <td className="py-3 px-4 text-red-500">${product.lastPrice}</td>
-                  <td className="py-3 px-4">{product.stock}</td>
-                  <td className="py-3 px-4">{product.description}</td>
-                  <td className="py-3 px-4 flex justify-center space-x-3">
-                    <button
-                      className="text-blue-600 hover:text-blue-800 transition-all cursor-pointer"
-                      aria-label="Edit Product"
-                    >
-                      <FaPencil />
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-800 transition-all cursor-pointer"
-                      aria-label="Delete Product"
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
+      <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-md p-8">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Admin Products Page</h1>
+        {productsLoaded ? (
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+              <thead>
+                <tr className="bg-gray-100">
+                  {["Product ID", "Product Name", "Price", "Last Price", "Stock", "Description", "Action"].map((header) => (
+                    <th key={header} className="text-left px-6 py-4 border-b text-gray-700 font-medium">{header}</th>
+                  ))}
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" className="text-center py-4 text-gray-500">
-                  No products available
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {products.map((product, index) => (
+                  <tr
+                    key={product.productId}
+                    className={`hover:bg-gray-50 ${index % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
+                  >
+                    <td className="px-6 py-4 border-b text-gray-600">{product.productId}</td>
+                    <td className="px-6 py-4 border-b text-gray-600">{product.productName}</td>
+                    <td className="px-6 py-4 border-b text-gray-600">${product.price}</td>
+                    <td className="px-6 py-4 border-b text-gray-600">${product.lastPrice}</td>
+                    <td className="px-6 py-4 border-b text-gray-600">{product.stock}</td>
+                    <td className="px-6 py-4 border-b text-gray-600 truncate max-w-xs">{product.description}</td>
+                    <td className="px-6 py-4 border-b text-gray-600 text-center">
+                      <button
+                        className="text-red-500 hover:text-red-700 mr-2"
+                        title="Delete"
+                        onClick={() => deleteProduct(product.productId)}
+                      >
+                        <FaTrash />
+                      </button>
+                      <button
+                        className="text-blue-500 hover:text-blue-700"
+                        title="Edit"
+                        onClick={() => navigate("/admin/products/editProduct", { state: { product } })}
+                      >
+                        <FaPencil />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="w-full h-full flex justify-center items-center">
+            <div className="w-[60px] h-[60px] border-[4px] border-gray-200 border-b-[#3b82f6] animate-spin rounded-full"></div>
+          </div>
+        )}
       </div>
     </div>
   );
