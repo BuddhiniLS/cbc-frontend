@@ -15,6 +15,8 @@ export default function AdminProductsPage() {
       const fetchProducts = async () => {
         try {
           const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products");
+          
+
 
           if (Array.isArray(response.data)) {
             setProducts(response.data);

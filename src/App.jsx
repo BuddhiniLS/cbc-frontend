@@ -3,7 +3,7 @@ import React from 'react'
 import './App.css'
 import ProductCard from './components/productCard'
 import UserData from './components/userData'
-import Testing from './components/testing'
+
 import Loginpage from './pages/loginPage'
 import Homepage from './pages/homePage'
 
@@ -24,6 +24,7 @@ function App() {
           <Route path="/login" element={<Loginpage />} />
           <Route path="/signup" element={<UserData />} />
           <Route path="/admin/*" element={<AdminHomePage />} />
+          
         </Routes>
       </BrowserRouter>
     </>

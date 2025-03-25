@@ -2,27 +2,40 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import uploadMediaToSupabase from "../../utils/mediaUpload";
 
 export default function AddProductForm() {
     const [productId, setProductId] = useState("");
     const [productName, setProductName] = useState("");
     const [alternativeNames, setAlternativeNames] = useState("");
-    const [imageURLs, setImageURLs] = useState("");
+    const [imagefiles, setImageFiles] = useState([]);
     const [price, setPrice] = useState("");
     const [lastPrice, setLastPrice] = useState("");
     const [stock, setStock] = useState("");
     const [description, setDescription] = useState("");
     const navigate = useNavigate()
 
+
     async function handleSubmit() {
         const althName = alternativeNames.split(",");
-        const imgURLs = imageURLs.split(",");
+
+        const promisesArray = []
+
+        for (let i = 0; i < imagefiles.length; i++) {
+
+            promisesArray[i] = uploadMediaToSupabase(imagefiles[i])
+
+        }
+
+        const imgUrls = await Promise.all(promisesArray)
+
 
         const product = {
-            productId,
-            productName,
+
+            productId: productId,
+            productName: productName,
             alternativeNames: althName,
-            images: imgURLs,
+            images: imgUrls,
             price: price,
             lastPrice: lastPrice,
             stock: stock,
@@ -31,24 +44,19 @@ export default function AddProductForm() {
 
         const token = localStorage.getItem("token")
         try {
-            await axios.post("http://localhost:5000/api/products", product, {
+            await axios.post(import.meta.env.VITE_BACKEND_URL + "/http://localhost:5000/api/products", product, {
                 headers: { Authorization: "Bearer" + token }
             })
             navigate("/admin/products")
+            
             toast.success("product added successfully")
-            toast.error("faild to add product");
-
-
 
 
         } catch (err) {
+            toast.error("faild to add product");
 
 
         }
-
-
-
-
 
     }
 
@@ -77,8 +85,12 @@ export default function AddProductForm() {
 
                 <div className="flex flex-col mb-4">
                     <label className="font-medium text-gray-700">Image URLs</label>
-                    <input type="text" className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        placeholder="Image URLs" value={imageURLs} onChange={(e) => setImageURLs(e.target.value)} />
+                    <input type="file" className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        placeholder="Image URLs" onChange={(e) => {
+                            console.log(e.target.files[1])
+                            setImageFiles(e.target.files)
+
+                        }} multiple />
                 </div>
 
                 <div className="flex flex-col mb-4">
